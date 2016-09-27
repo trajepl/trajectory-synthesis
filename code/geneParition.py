@@ -1,5 +1,6 @@
-import baseline1 as rg
-import baseline2 as ip
+import baseline as rg
+import intersectPartition as ip
+import grid
 import features
 import random
 import math
@@ -20,6 +21,7 @@ def merge_sub_tra(tra, grid, repeat_grid):
             tra[x][y].append('0')
     print("...End update station 1...")
     sub1, sub2 = [], []
+    
     flag = 0
     for line in tra:
         for point in line:
@@ -38,7 +40,7 @@ def merge_sub_tra(tra, grid, repeat_grid):
                 sub1 = []
 
 def update_grid_repeat(tra):
-    ip_grid = rg.grid_map(200)
+    ip_grid = grid.grid_map(200)
     for line in tra:
         for i in range(len(line)):
             if len(line[i]) > 5:
@@ -68,7 +70,7 @@ def gp():
 
     write_path = "../resultdata/genTra3.txt"
     base1 = open(write_path, "w")
-
+    
     print("Begin find max and min  ...")
     max_lng, max_lat, min_lng, min_lat = rg.max_range(tra)
     interval = max(max_lng - min_lng, max_lat - min_lat) / 200

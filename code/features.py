@@ -1,17 +1,33 @@
 import os
 import math
 import figure
+import fileOperator
+
+__all__ = [
+    "show",
+    "geo_len",
+    "sum_features",
+    "rates_features",
+    "select_length",
+    "select_rate",
+    "select_acc",
+    "select_turn",
+    "cos_law",
+    "toTime",
+    "addTime",
+    "features",
+]
 
 def show():
     # path = "../falsedata/13K.txt"
     path = "../resultdata/genTra2.txt"
-    global count_tra
+
     l = [0 for x in range(0, 20)]
     rates = [0 for x in range(0, 20)]
     acc = [0 for x in range(0, 20)]
     ag = [0 for x in range(0, 20)]
 
-    trajectory = read_file(path)
+    trajectory = fileOperator.read_file(path)
     for i in range(0, len(trajectory)):
         tra_len, tra_rate, tra_ac, tra_turn = features(trajectory[i])
         x = select_length(tra_len)
@@ -40,34 +56,6 @@ def show():
     figure.fig(rates, "speed")
     figure.fig(acc, "acceleration")
     figure.fig(ag, "U-turn")
-
-
-def read_file(filepath):
-    traje_file = open(filepath, 'r')
-    matrix = []
-    matrix.append([])
-    global count_tra
-    count = 0
-    line = traje_file.readline().strip().split(' ')
-    first = line
-
-    matrix[count].append(line)
-
-    while len(line) >= 2:
-        line = traje_file.readline().strip().split(' ')
-        if first[0] == line[0]:
-            matrix[count].append(line)
-        else:
-            count += 1
-            matrix.append([])
-            first = line
-            matrix[count].append(line)
-            count_tra += 1
-            if count_tra > 10000:
-                break
-    traje_file.close()
-    return matrix
-
 
 def geo_len(lng1, lat1, lng2, lat2):
     r = 6371000
@@ -113,15 +101,42 @@ def select_turn(num):
         return int(num) // 10
     return 21
 
-
 def cos_law(a, b, c):
     if b == 0 or c == 0 or a == 0:
         return 0
     return (a ** 2 + b ** 2 - c ** 2) / (2 * b * a)
 
-
 def toTime(time):
-    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + 
+    (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+
+def addTime(time):
+    day = time // (3600 * 24)
+    time -= 24 * 3600 * day
+    h = time // 3600
+    time -= 3600 * h
+    minutes = time // 60
+    seconds = time - minutes * 60
+
+    time_str = ''
+    if day <= 9:
+        time_str += '0' + str(day)
+    else:
+        time_str += str(day)
+    if h <= 9:
+        time_str += '0' + str(h)
+    else:
+        time_str += str(h)
+    if minutes <= 9:
+        time_str += '0' + str(minutes)
+    else:
+        time_str += str(minutes)
+    if seconds <= 9:
+        time_str += '0' + str(seconds)
+    else:
+        time_str += str(seconds)
+    if len(time_str) == 8:
+        return time_str
 
 def features(tra):
     sum_len = 0
@@ -161,11 +176,9 @@ def features(tra):
             sum_ac += ac
         rate = sum_rate / (len(tra) - 1)
         ac = sum_ac / (len(tra) - 1)
-    #print('%f\n' %(sum_len))
+    
     return sum_len, rate, ac, u_turn
 
-
-count_tra = 0
 
 if __name__ == '__main__':
     show()

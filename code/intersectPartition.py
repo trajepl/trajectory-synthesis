@@ -3,8 +3,103 @@ import copy
 import math
 import os
 from functools import reduce
-import baseline1 as rg
+import fileOperator
+import grid
 import features
+
+
+# baseline2 which contains two conponents: 1 divide, 2 connect
+# this methods contains two sub-methods 
+# Node that: ip-divide is replace by gene_partiton in optimized methods
+def ip_divide():
+
+def ip_connect():
+
+# optimized methods: gene partition
+def gene_partition():
+    num_gen_tra = 10000
+
+    fea = ip.standard()
+    for i in range(len(fea)):
+        for j in range(len(fea[i])):
+            fea[i][j] = math.ceil(num_gen_tra * float(fea[i][j]))
+    
+    filepath = "../falsedata/13K.txt"
+
+    print("Begin read tra file ...")
+    tra = fileOperator.read_file(filepath)
+    print("End read tra file ...")
+
+    write_path = "../resultdata/genTra3.txt"
+    file_in = open(write_path, "w")
+    
+    print("Begin find max and min  ...")
+    max_lng, max_lat, min_lng, min_lat = grid.max_range(tra)
+    interval = max(max_lng - min_lng, max_lat - min_lat) / 200
+    print("End find max and min  ...")
+
+    grid = ip.sub_grid_map(tra, min_lng, min_lat, interval)
+    repeat = grid.crossing_cell(grid)
+
+    print("Begin update gen_part  ...")
+    merge_sub_tra(tra, grid, repeat)
+    ip_grid, ip_repeat = update_grid_repeat(tra)
+    print("End updata gen_part  ...")
+
+    count_tra = 0
+
+    delta_x = [10, 6, 1, 10]
+    print("Begin generate new tra...")
+    for i in range(num_gen_tra):
+        if len(ip_repeat) != 0:
+            rand = random.randint(0, len(ip_repeat) - 1)
+        point = ip_repeat[rand]
+        point_inline = ip_grid[point[0]][point[1]]
+
+        min_f = float('inf')
+        flag_tra = tra[0]
+
+        rand_inline = random.sample(point_inline, 1)
+        x, y = rand_inline[0]
+        sub0 = ip.sub_tra(tra, x, y, ip_grid)
+        next_x, next_y = sub0[-1][4]
+
+        length1 = len(point_inline) if len(point_inline) <= 20 else 20
+        length2 = len(ip_grid[next_x][next_y]) if len(ip_grid[next_x][next_y]) <= 20 else 20
+
+        for i in range(length1):
+            index_px = random.randint(0, len(point_inline) - 1)
+            px = point_inline[index_px]
+            if px[0] != x and px[1] != 0 and px[1] != len(tra[px[0]]) - 1:
+
+                sub_pre = ip.sub_tra(tra, px[0], px[1], ip_grid, False)
+                sub_tra0 = ip.link_sub_tra(sub0, sub_pre, False)
+
+                for j in range(length2):
+                    index_px1 = random.randint(0, len(ip_grid[next_x][next_y]) - 1)
+                    px1 = point_inline[index_px]
+
+                    if px1[0] != next_x and px1[1] != 0 and px1[1] != len(tra[px1[0]]):
+                        sub_next = ip.sub_tra(tra, px1[0], px1[1], ip_grid)
+                        sub_tra0 = ip.link_sub_tra(sub_tra0, sub_next)
+
+                        list_fea = list(features.features(sub_tra0))
+                        tmp_f = ip.f(list_fea, delta_x)
+                        if tmp_f < min_f:
+                            flag_tra = sub_tra0
+                            min_f = tmp_f
+            
+        line1 = ''
+
+        for j in range(len(flag_tra)):
+            line1 = line1 + str(count_tra) + ' ' + flag_tra[j][1] + ' ' + flag_tra[j][2] + ' ' + flag_tra[j][3] + '\n'
+        file_in.write(line1)
+        count_tra += 1
+
+        delta_x = ip.max_deltax(fea)
+        print(count_tra)
+    file_in.close()
+    print("End generate new tra...")
 
 def standard():
     feature = [[0 for i in range(20)] for j in range(4)]
@@ -17,7 +112,6 @@ def standard():
         feature[3][i] = line[3]
         i += 1
     return feature
-
 
 def max_deltax(fea):
     deltax = [10, 1, 1, 10]
@@ -38,7 +132,6 @@ def max_deltax(fea):
         list_deltax[i] = deltax[i] * list_deltax[i]
     return list_deltax
 
-
 def f(x, delta_x):
     b = []
 
@@ -54,7 +147,7 @@ def f(x, delta_x):
 def sub_grid_map(tra, min_lng, min_lat, interval):
     # tmp_tra = copy.deepcopy(tra)
     tmp_tra = tra
-    grid = rg.grid_map(200)
+    grid = grid.grid_map(200)
 
     for line in tmp_tra:
         for i in range(len(line)):
@@ -79,7 +172,7 @@ def link_sub_tra(tra_1, tra_2, towards=True):
     tra2 = copy.deepcopy(tra_2)
 
     for m in range(len(tra2) - 1):
-        s = rg.addTime(rg.toTime(tra1[-1][1]) + abs(rg.toTime(tra_2[m][1]) - rg.toTime(tra_2[m + 1][1])))
+        s = features.addTime(features.toTime(tra1[-1][1]) + abs(features.toTime(tra_2[m][1]) - features.toTime(tra_2[m + 1][1])))
         tra2[m][1] = tra2[m][1].replace(tra2[m][1][6:], s)
         tra2[m][0] = tra1[m][0]
         if towards:
@@ -119,7 +212,7 @@ def sub_tra(tra, x, y, grid, towards=True):
     return tmp_sub_tra
 
 
-def main():
+def ip():
     num_gen_tra = 1000
 
     fea = standard()
@@ -130,19 +223,19 @@ def main():
     filepath = "../falsedata/13K.txt"
 
     print("Begin read tra file ...")
-    tra = rg.read_file(filepath)
+    tra = fileOperator.read_file(filepath)
     print("End read tra file ...")
 
     write_path = "../resultdata/genTra2.txt"
-    base1 = open(write_path, "w")
+    file_in = open(write_path, "w")
 
     print("Begin find max and min  ...")
-    max_lng, max_lat, min_lng, min_lat = rg.max_range(tra)
+    max_lng, max_lat, min_lng, min_lat = grid.max_range(tra)
     interval = max(max_lng - min_lng, max_lat - min_lat) / 200
     print("End find max and min  ...")
 
     grid = sub_grid_map(tra, min_lng, min_lat, interval)
-    repeat = rg.repeat_grid(grid)
+    repeat = grid.crossing_cell(grid)
 
     count_tra = 0
 
@@ -193,13 +286,13 @@ def main():
 
         for j in range(len(flag_tra)):
             line1 = line1 + str(count_tra) + ' ' + flag_tra[j][1] + ' ' + flag_tra[j][2] + ' ' + flag_tra[j][3] + '\n'
-        base1.write(line1)
+        file_in.write(line1)
         count_tra += 1
 
         delta_x = max_deltax(fea)
         print(count_tra)
-    base1.close()
+    file_in.close()
     print("End generate new tra...")
 
 if __name__ == "__main__":
-    main()
+    ip()
