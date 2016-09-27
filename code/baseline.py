@@ -1,13 +1,12 @@
 import random
 import copy
-import math
-import os
 import fileOperator
 import grid
-from functools import reduce
+
 
 __all__=[
-
+    "swap_tra",
+    "random_generation",
 ]
 
 def swap_tra(tra1, tra2, i, j):
@@ -20,7 +19,7 @@ def swap_tra(tra1, tra2, i, j):
             if j + m - i < len(tra2):
                 tmp.append(swap1[m])
                 if len(tra2) == 4:
-                    s = addTime(toTime(tra1[m-1][1]) + toTime(tra2[j + m - i][1]) - toTime(tra2[j + m - i - 1][1]))
+                    s = grid.addTime(grid.toTime(tra1[m-1][1]) + grid.toTime(tra2[j + m - i][1]) - grid.toTime(tra2[j + m - i - 1][1]))
                     tra1[m][1] = tra1[m][1].replace(tra1[m][1][6:], s)
                     tra1[m][2] = tra2[j + m - i][2]
                     tra1[m][3] = tra2[j + m - i][3]
@@ -32,7 +31,7 @@ def swap_tra(tra1, tra2, i, j):
         for n in range(j + 1, len(tmp) + j + 1):
             if n < len(tra2):
                 if len(tmp) == 4:
-                    s = addTime(toTime(tra2[n-1][1]) + toTime(tmp[n - j - 1][1]) - toTime(tmp[n - j - 2][1]))
+                    s = grid.addTime(grid.toTime(tra2[n-1][1]) + grid.toTime(tmp[n - j - 1][1]) - grid.toTime(tmp[n - j - 2][1]))
                     tra2[n][1] = tra2[n][1].replace(tra2[n][1][6:], s)
                     tra2[n][2] = tmp[n - j - 1][2]
                     tra2[n][3] = tmp[n - j - 1][3]
@@ -43,7 +42,7 @@ def swap_tra(tra1, tra2, i, j):
             if i + m - j < len(tra1):
                 tmp.append(swap2[m])
                 if len(tra1) == 4:
-                    s = addTime(toTime(tra2[m-1][1]) + toTime(tra1[i + m - j][1]) - toTime(tra1[i + m - j - 1][1]))
+                    s = grid.addTime(grid.toTime(tra2[m-1][1]) + grid.toTime(tra1[i + m - j][1]) - grid.toTime(tra1[i + m - j - 1][1]))
                     tra2[m][1] = tra2[m][1].replace(tra2[m][1][6:],  s)
                     tra2[m][2] = tra1[i + m - j][2]
                     tra2[m][3] = tra1[i + m - j][3]
@@ -55,7 +54,7 @@ def swap_tra(tra1, tra2, i, j):
         for n in range(i + 1, len(tmp) + i + 1):
             if n < len(tra1):
                 if len(tmp) == 4:
-                    s = addTime(toTime(tra1[n-1][1]) + toTime(tmp[n - i - 1][1]) - toTime(tmp[n - i - 2][1]))
+                    s = grid.addTime(grid.toTime(tra1[n-1][1]) + grid.toTime(tmp[n - i - 1][1]) - grid.toTime(tmp[n - i - 2][1]))
                     tra1[n][1] = tra1[n][1].replace(tra1[n][1][6:], s)
                     tra1[n][2] = tmp[n - i - 1][2]
                     tra1[n][3] = tmp[n - i - 1][3]
@@ -78,7 +77,7 @@ def random_generation(filepath, write_path):
     print("End find max and min  ...")
 
 	
-	crossing, grid = grid.cluster();
+	grid, repeat = grid.cluster();
 	print("Begin generate new tra...")
     for i in range(5000):
         rand = random.randint(0, len(repeat)-1)
@@ -103,3 +102,6 @@ def random_generation(filepath, write_path):
 
     file_in.close()
     print("End generate new tra...") 
+
+if __name__ == "__main__":
+    random_generation("../falsedata/13K.txt", "../resultdata/genTra1.txt");

@@ -1,13 +1,20 @@
 import random
 import copy
 import math
-import os
 from functools import reduce
 import fileOperator
 import grid
 import features
 
-
+__all__ = [
+    "gene_partition",
+    "standard",
+    "max_deltax",
+    "sub_grid_map",
+    "link_sub_tra",
+    "ip",
+    "f",
+]
 # baseline2 which contains two conponents: 1 divide, 2 connect
 # this methods contains two sub-methods 
 # Node that: ip-divide is replace by gene_partiton in optimized methods

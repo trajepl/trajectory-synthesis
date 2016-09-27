@@ -1,55 +1,58 @@
-import random
-import copy
-import math
-import os
-
 __all__ = [
-	'count_tra', 
-	'read_file',
-	'write_file',
+    'count_tra',
+    'read_file',
+    'write_file',
 ]
 
 count_tra = 1
 
+
 def read_file(filepath):
-	global count_tra
-	maxtrix = [[]]
-	count = 0
+    global count_tra
+    maxtrix = [[]]
+    count = 0
 
-	file_in = open(filepath, 'r')
-	print("Begin read trajectory file...")
-	line = file_in.readline().strip().split(' ')
-	first = line
+    file_in = open(filepath, 'r')
+    print("Begin read trajectory file...")
+    line = file_in.readline().strip().split(' ')
+    first = line
 
-	maxtrix[count].append(line)
+    maxtrix[count].append(line)
 
-	while len(line) > 2:
-		line = file_in.readline().strip().split(' ')
-		if first[0] == line[0]:
-			maxtrix[count].append(line)
-		else:
-			count += 1
-			maxtrix.append([])
-			first = line
-			maxtrix[count].append(line)
-			
-			count_tra += 1
-			if count_tra > 1000:
-				count_tra -= 1
-				maxtrix.pop()
-				break
-			
+    while len(line) > 2:
+        line = file_in.readline().strip().split(' ')
+        if first[0] == line[0]:
+            maxtrix[count].append(line)
+        else:
+            count += 1
+            maxtrix.append([])
+            first = line
+            maxtrix[count].append(line)
 
-	file_in.close()
-	print("End read trajectory file...")
-	return maxtrix
+            count_tra += 1
+            if count_tra > 1000:
+                count_tra -= 1
+                maxtrix.pop()
+                break
+
+    file_in.close()
+    print("End read trajectory file...")
+    return maxtrix
+
 
 def write_file(filepath, tra):
-	global count_tra
+    global count_tra
+    file_out = open(filepath, 'w')
 
-	file_out = open(filepath, 'w')
+    for i in range(count_tra):
+        for line in tra[i]:
+            tmp += ' '.join(line) + '\n'
+            file_out.write(tmp)
 
-	for i in range(count_tra):
-		for line in tra[i]:
-			tmp += ' '.join(line) + '\n'
-			file_out.write(tmp)
+
+def test():
+	return 0
+
+
+if __name__ == "__main__":
+	test();

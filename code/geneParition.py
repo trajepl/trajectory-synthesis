@@ -5,6 +5,14 @@ import features
 import random
 import math
 
+__all__ = [
+    "Sim",
+    "merge_sub_tra",
+    "update_grid_repeat",
+    "gp",
+
+]
+
 def Sim(tra_f1, tra_f2):
     a = sum([tra_f1[i] * tra_f2[i] for i in range(len(tra_f1))])
     b = math.sqrt(sum([x ** 2 for x in tra_f1]))

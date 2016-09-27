@@ -1,4 +1,3 @@
-import os
 import math
 import figure
 import fileOperator
@@ -18,9 +17,10 @@ __all__ = [
     "features",
 ]
 
+
 def show():
-    # path = "../falsedata/13K.txt"
-    path = "../resultdata/genTra2.txt"
+    path = "../falsedata/13K.txt"
+    # path = "../resultdata/genTra2.txt"
 
     l = [0 for x in range(0, 20)]
     rates = [0 for x in range(0, 20)]
@@ -47,15 +47,16 @@ def show():
     # map(rates_features, [l, rates, acc, ag], [num_len, num_rate, num_ac, num_turn])
 
     for i in range(20):
-        l[i] = "%.4f" %(l[i] / num_len)
-        rates[i]= " %.4f" %(rates[i]/num_rate)
-        acc[i] = "%.4f" %(acc[i]/num_ac)
-        ag[i] = "%.4f" %(ag[i]/num_turn)
+        l[i] = "%.4f" % (l[i] / num_len)
+        rates[i] = " %.4f" % (rates[i] / num_rate)
+        acc[i] = "%.4f" % (acc[i] / num_ac)
+        ag[i] = "%.4f" % (ag[i] / num_turn)
 
     figure.fig(l, "length")
     figure.fig(rates, "speed")
     figure.fig(acc, "acceleration")
     figure.fig(ag, "U-turn")
+
 
 def geo_len(lng1, lat1, lng2, lat2):
     r = 6371000
@@ -71,44 +72,53 @@ def geo_len(lng1, lat1, lng2, lat2):
         return 0
     return distance
 
+
 def sum_features(f):
     sum_f = 0
     for i in f:
         sum_f += i
     return sum_f
 
+
 def rates_features(f, sum_f):
     for i in f:
         i = i / sum_f
+
 
 def select_length(num):
     if num > 0:
         return int(float(num) / 1000) // 10
     return 21
 
+
 def select_rate(num):
     if num > 0:
         return int(num)
     return 21
+
 
 def select_acc(num):
     if num > 0:
         return int(float(num) * 100)
     return 21
 
+
 def select_turn(num):
     if num > 0:
         return int(num) // 10
     return 21
+
 
 def cos_law(a, b, c):
     if b == 0 or c == 0 or a == 0:
         return 0
     return (a ** 2 + b ** 2 - c ** 2) / (2 * b * a)
 
+
 def toTime(time):
-    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + 
-    (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 \
+           + (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+
 
 def addTime(time):
     day = time // (3600 * 24)
@@ -137,6 +147,7 @@ def addTime(time):
         time_str += str(seconds)
     if len(time_str) == 8:
         return time_str
+
 
 def features(tra):
     sum_len = 0
@@ -168,7 +179,6 @@ def features(tra):
                     ac = abs((rate - rate1) / (time3 - time2))
 
                 if cos_law(delta_len_a, delta_len_b, delta_len_c) >= flag_angle:
-
                     u_turn += 1
 
             sum_len += delta_len_a
@@ -176,7 +186,7 @@ def features(tra):
             sum_ac += ac
         rate = sum_rate / (len(tra) - 1)
         ac = sum_ac / (len(tra) - 1)
-    
+
     return sum_len, rate, ac, u_turn
 
 
