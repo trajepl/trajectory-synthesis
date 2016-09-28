@@ -28,9 +28,8 @@ def read_file(filepath):
             maxtrix.append([])
             first = line
             maxtrix[count].append(line)
-
             count_tra += 1
-            if count_tra > 1000:
+            if count_tra > 5000:
                 count_tra -= 1
                 maxtrix.pop()
                 break
@@ -48,6 +47,8 @@ def write_file(filepath, tra):
         for line in tra[i]:
             tmp += ' '.join(line) + '\n'
             file_out.write(tmp)
+            
+    file_out.close()
 
 
 def test():

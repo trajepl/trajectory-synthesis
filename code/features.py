@@ -15,6 +15,7 @@ __all__ = [
     "toTime",
     "addTime",
     "features",
+    "length_features",
 ]
 
 
@@ -70,8 +71,20 @@ def geo_len(lng1, lat1, lng2, lat2):
     distance = r * step2
     if distance > 1000:
         return 0
-    return distance
+    return abs(distance)
 
+def geo_len_delta(lng1, lat1, lng2, lat2):
+    r = 6371000
+    lng1, lat1, lng2, lat2 = map(math.radians, [lng1, lat1, lng2, lat2])
+
+    cal_lng = lng2 - lng1
+    cal_lat = lat2 - lat1
+
+    step1 = math.sin(cal_lat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(cal_lng / 2) ** 2
+    step2 = 2 * math.asin(min(1, math.sqrt(step1)))
+    distance = r * step2
+
+    return abs(distance)
 
 def sum_features(f):
     sum_f = 0
@@ -116,8 +129,7 @@ def cos_law(a, b, c):
 
 
 def toTime(time):
-    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 \
-           + (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
 
 
 def addTime(time):
@@ -148,6 +160,25 @@ def addTime(time):
     if len(time_str) == 8:
         return time_str
 
+def length_features(tra, grid_map):
+    length = []
+    for i in range(20):
+        length.append(0)
+
+    print("Begin get the distribute of length...")
+    for line in tra:
+        sum_length = 0
+        x, y = int(line[-1][-1][0]), int(line[-1][-1][1])
+        for item in grid_map[x][y]:
+            if int(item[0]) == int(line[0][0]) and int(item[1]) == len(line)-1:
+                sum_length = item[-1]
+                break
+        id_tmp = math.floor(sum_length / 10000)
+        if id_tmp < 20 and sum_length > 1:
+            length[id_tmp] += 1
+    print("End get the distribute of length...")
+    print(length)
+    return length
 
 def features(tra):
     sum_len = 0
