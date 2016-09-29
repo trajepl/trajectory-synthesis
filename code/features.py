@@ -20,8 +20,8 @@ __all__ = [
 
 
 def show():
-    path = "../falsedata/13K.txt"
-    # path = "../resultdata/genTra2.txt"
+    # path = "../falsedata/13K.txt"
+    path = "../resultdata/extend_tmp.txt"
 
     l = [0 for x in range(0, 20)]
     rates = [0 for x in range(0, 20)]

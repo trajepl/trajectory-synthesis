@@ -57,7 +57,7 @@ def crossing_cell(grid):
 
 def cluster(tra, min_lng, min_lat, interval):
     grid_cell = grid_map(200)
-
+    print("Begin grid cluster ...")
     for line in tra:
         delta_len = 0
         lng_start, lat_start = float(line[0][3]), float(line[0][2])
@@ -69,7 +69,7 @@ def cluster(tra, min_lng, min_lat, interval):
                 x = math.floor((lng - min_lng) / interval)
                 y = math.floor((lat - min_lat) / interval)
                 
-                tmp_len = geo_len_delta(lng_start, lat_start, lng, lat)
+                tmp_len = abs(geo_len_delta(lng_start, lat_start, lng, lat))
                 delta_len += tmp_len
 
                 tmp = [int(line[i][0]), i, delta_len]
@@ -82,7 +82,7 @@ def cluster(tra, min_lng, min_lat, interval):
 
                 # append the id of grid cell of trajectory to multi_list tra
                 line[i].append([x, y]);
-
+    print("End grid cluster ...")
     crossing = crossing_cell(grid_cell)
     return grid_cell, crossing
     

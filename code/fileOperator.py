@@ -40,20 +40,22 @@ def read_file(filepath):
 
 
 def write_file(filepath, tra):
-    global count_tra
     file_out = open(filepath, 'w')
 
-    for i in range(count_tra):
+    print("Dividing...")
+    cnt = 0
+    for i in range(len(tra)):
         for line in tra[i]:
-            tmp += ' '.join(line) + '\n'
+            tmp = str(cnt) + " " + line[1] + " " + line[2] + " " + line[3] + "\n"
             file_out.write(tmp)
-            
+        cnt += 1
+        
     file_out.close()
+    print("Finished...")
 
 
 def test():
 	return 0
-
 
 if __name__ == "__main__":
 	test();

@@ -19,11 +19,12 @@ def init_tra_flag(tra):
 
 def synthesize(tra, grid):
 	global count_tra
-	# is_single(cell)
+	# is_single(cell) 
 	connect_id = random.randint(0, count_tra)
 	sum_tra = copy.deepcopy(tra[connect_id])
+	# get the locate of grid_map
 	last_point = tra[connect_id][-1][-1]
-
+	
 	add_tra_flag(tra)
 
 	x, y = int(last_point[0]), int(last_point[1])
@@ -32,10 +33,16 @@ def synthesize(tra, grid):
 	# print(is_not_single(cell) and not tra[connect_id][-1][-1])
 	time_end = sum_tra.pop()[1]
 
-	while(is_not_single(cell) and not tra[connect_id][-1][-1]):
+	while(is_not_single(cell) and tra[connect_id][-1][-1] == 0):
+		for item in tra[connect_id]:
+			item[-1] = 1
+
 		tmp = random.choice(cell)
-		while tmp[0] == connect_id:
-			tmp = random.choice(cell)
+		for item in cell:
+			if tmp[0] == connect_id:
+				tmp = random.choice(cell)
+			else:
+				break
 
 		connect_id = tmp[0]
 		start_point = tra[connect_id][tmp[1]][1].strip()
@@ -74,6 +81,7 @@ def synthesize(tra, grid):
 		cell = grid[x][y]
 		
 		time_end = sum_tra[-1][1]
+		print(time_end)
 	
 	init_tra_flag(tra)
 	
@@ -94,13 +102,15 @@ def disdtribute_rate(item):
 def shuffle_seque(n, rate):
 	number_goal = []
 	sequence = []
+	cnt = 1
 	for item in rate:
 		number_goal.append(round(n*item))
 		for i in range(number_goal[-1]):
-			sequence.append(abs(random.randint(10000*(i-1), 10000*i)))
+			sequence.append(random.randint(10000*(cnt-1), 10000*cnt))
+		cnt += 1
 
 	random.shuffle(sequence)
-	
+	# print(sequence)
 	return sequence
 
 def append_sum(sum_tra):
@@ -115,7 +125,7 @@ if __name__ == '__main__':
 	# generate histories trajectories
 	filepath = "../falsedata/13K.txt"
 	writepath = "../resultdata/extend.txt"
-	number_goal = 100
+	number_goal = 1000
 	count_cell = 200
 
 	global count_tra
@@ -131,15 +141,18 @@ if __name__ == '__main__':
 
 	grid, repeat = cluster(tra, min_lng, min_lat, interval)
 
+	print("Begin get features and get the sequence ...")
 	length = length_features(tra, grid)
 	length_rate = disdtribute_rate(length)
+
 	sequence = shuffle_seque(number_goal, length_rate)
+	print("End get features and get the sequence ...")
 
 	tra_tmp = copy.deepcopy(tra)
+	print("Begin synthesize sum_tra ...")
 	sum_tra = synthesize(tra, grid)
-
-	# for item in sequence:
 	append_sum(sum_tra)
+	print("End synthesize sum_tra ...")
 
 	# dividing the new looong trajectories
 	new_tra = [[]]
@@ -151,23 +164,28 @@ if __name__ == '__main__':
 	for item in sequence:
 		count += 1
 		while point_cnt < len(sum_tra):
+			# print("Note that: ", item, "First-id: ", first_id, "point-cnt: ", point_cnt)
+			# print(sum_tra[point_cnt][4] - sum_tra[first_id][4], item)
 			if sum_tra[point_cnt][4] - sum_tra[first_id][4] > item:
 				print("dividing", '\n')
 				first_id = point_cnt
 				new_cnt += 1
 				new_tra.append([])
 				break
-			print(new_cnt, point_cnt, len(sum_tra), item, first_id)
-			new_tra[new_cnt].append(sum_tra[point_cnt])
+			# print(new_cnt, point_cnt, len(sum_tra), item, first_id)
+			new_tra[-1].append(sum_tra[point_cnt])
 			point_cnt += 1
-		if count >= number_goal:
+		if new_cnt >= number_goal:
 			print("finish apart", '\n')
 			break
+		elif point_cnt < len(sum_tra):
+			continue
 		else:
 			print("do it again", '\n')
 			tra_tmp_loop = copy.deepcopy(tra_tmp)
 			sum_tra = synthesize(tra_tmp_loop, grid)
-			point_cnt = 0
+			append_sum(sum_tra)
+			point_cnt = first_id = 0
 			count -= 1
 			continue
 
