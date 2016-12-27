@@ -71,7 +71,7 @@ def cluster(tra, min_lng, min_lat, interval):
                 lng, lat= float(line[i][3]), float(line[i][2])
                 x = math.floor((lng - min_lng) / interval)
                 y = math.floor((lat - min_lat) / interval)
-                
+
                 tmp_len = abs(geo_len_delta(lng_start, lat_start, lng, lat))
                 delta_len += tmp_len
 
@@ -80,12 +80,11 @@ def cluster(tra, min_lng, min_lat, interval):
 
                 x = x if x <= 199 else 199
                 y = y if y <= 199 else 199
-                
+
                 grid_cell[x][y].append(tmp)
 
                 # append the id of grid cell of trajectory to multi_list tra
-                line[i].append([x, y]);
+                line[i].append([x, y])
     print("End grid cluster ...")
     crossing = crossing_cell(grid_cell)
     return grid_cell, crossing
-    

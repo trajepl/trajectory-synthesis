@@ -74,6 +74,7 @@ def geo_len(lng1, lat1, lng2, lat2):
         return 0
     return abs(distance)
 
+
 def geo_len_delta(lng1, lat1, lng2, lat2):
     r = 6371000
     lng1, lat1, lng2, lat2 = map(math.radians, [lng1, lat1, lng2, lat2])
@@ -86,6 +87,7 @@ def geo_len_delta(lng1, lat1, lng2, lat2):
     distance = r * step2
 
     return abs(distance)
+
 
 def sum_features(f):
     sum_f = 0
@@ -130,7 +132,8 @@ def cos_law(a, b, c):
 
 
 def toTime(time):
-    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + (int(time[-5]) + int(time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
+    return int(time[-1]) + int(time[-2]) * 10 + (int(time[-3]) + int(time[-4]) * 10) * 60 + (int(time[-5]) + int(
+        time[-6]) * 10) * 3600 + (int(time[-7]) + int(time[-8])) * 24 * 3600
 
 
 def addTime(time):
@@ -161,6 +164,7 @@ def addTime(time):
     if len(time_str) == 8:
         return time_str
 
+
 def length_features(tra, grid_map):
     length = []
     for i in range(20):
@@ -171,7 +175,7 @@ def length_features(tra, grid_map):
         sum_length = 0
         x, y = int(line[-1][-1][0]), int(line[-1][-1][1])
         for item in grid_map[x][y]:
-            if int(item[0]) == int(line[0][0]) and int(item[1]) == len(line)-1:
+            if int(item[0]) == int(line[0][0]) and int(item[1]) == len(line) - 1:
                 sum_length = item[-1]
                 break
         id_tmp = math.floor(sum_length / 10000)
@@ -180,6 +184,7 @@ def length_features(tra, grid_map):
     print("End get the distribute of length...")
     print(length)
     return length
+
 
 def features(tra):
     sum_len = 0

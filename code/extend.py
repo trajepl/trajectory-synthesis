@@ -1,4 +1,4 @@
-from grid import *
+# from grid import *
 from fileOperator import *
 from features import *
 import random
@@ -89,7 +89,7 @@ def synthesize(tra, grid):
 	# 	print(line)
 	return sum_tra
 
-def disdtribute_rate(item):
+def distribute_rate(item):
 	sum_rate = 0
 	for line in item:
 		sum_rate += int(line)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
 	print("Begin get features and get the sequence ...")
 	length = length_features(tra, grid)
-	length_rate = disdtribute_rate(length)
+	length_rate = distribute_rate(length)
 
 	sequence = shuffle_seque(number_goal, length_rate)
 	print("End get features and get the sequence ...")
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 	append_sum(sum_tra)
 	print("End synthesize sum_tra ...")
 
-	# dividing the new looong trajectories
+	# dividing the new long trajectories
 	new_tra = [[]]
 	new_cnt = 0
 	point_cnt = 0
