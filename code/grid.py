@@ -7,8 +7,11 @@ __all__ = [
     "is_not_single",
     "crossing_cell",
     "cluster",
+    "test",
 ]
 
+def test():
+    print('test')
 
 def max_range(tra):
     max_lng, max_lat = 0.0, 0.0

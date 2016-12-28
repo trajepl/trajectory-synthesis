@@ -6,7 +6,6 @@ __all__ = [
 
 count_tra = 1
 
-
 def read_file(filepath):
     global count_tra
     maxtrix = [[]]

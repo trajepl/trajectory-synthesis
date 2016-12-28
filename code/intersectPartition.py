@@ -218,7 +218,7 @@ def sub_tra(tra, x, y, grid, towards=True):
     return tmp_sub_tra
 
 
-def ip():
+def ip(filepath, write_path):
     num_gen_tra = 1000
 
     fea = standard()
@@ -226,13 +226,10 @@ def ip():
         for j in range(len(fea[i])):
             fea[i][j] = math.ceil( num_gen_tra * float(fea[i][j]))
 
-    filepath = "../falsedata/13K.txt"
-
     print("Begin read tra file ...")
     tra = fileOperator.read_file(filepath)
     print("End read tra file ...")
 
-    write_path = "../resultdata/genTra2.txt"
     file_in = open(write_path, "w")
 
     print("Begin find max and min  ...")
@@ -301,4 +298,5 @@ def ip():
     print("End generate new tra...")
 
 if __name__ == "__main__":
-    ip()
+    ip("../falsedata/b13k.txt", "../dataresult/Beijing/IP.txt")
+    ip("../falsedata/s13k.txt", "../dataresult/Shanghai/IP.txt")

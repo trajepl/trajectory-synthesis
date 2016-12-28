@@ -5,6 +5,7 @@ import fileOperator
 __all__ = [
     "show",
     "geo_len",
+    "geo_len_delta"
     "sum_features",
     "rates_features",
     "select_length",

@@ -5,7 +5,7 @@ import grid
 
 
 __all__=[
-	"swap_tra",
+    "swap_tra",
 	"random_generation",
 ]
 
@@ -64,11 +64,9 @@ def swap_tra(tra1, tra2, i, j):
 
 # baseline1: random generation
 def random_generation(filepath, write_path):
-	# filepath = "../falsedata/13K.txt"
-
+	grid.test()
 	tra = fileOperator.read_file(filepath);
 
-	# write_path = "../resultdata/genTra1.txt"
 	file_in = open(write_path, "w")
 
 	print("Begin find max and min  ...")
@@ -104,4 +102,6 @@ def random_generation(filepath, write_path):
 	print("End generate new tra...") 
 
 if __name__ == "__main__":
-	random_generation("../falsedata/13K.txt", "../resultdata/genTra1.txt");
+	
+	random_generation("../falsedata/b13k.txt", "../resultdata/Beijing/RG.txt");
+	random_generation("../falsedata/s13k.txt", "../resultdata/Shanghai/RG.txt");
