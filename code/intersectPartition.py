@@ -14,6 +14,8 @@ __all__ = [
     "ip",
     "f",
 ]
+
+
 # baseline2 which contains two conponents: 1 divide, 2 connect
 # this methods contains two sub-methods 
 # Node that: ip-divide is replace by gene_partiton in optimized methods
@@ -29,7 +31,7 @@ __all__ = [
 #     for i in range(len(fea)):
 #         for j in range(len(fea[i])):
 #             fea[i][j] = math.ceil(num_gen_tra * float(fea[i][j]))
-    
+
 #     filepath = "../falsedata/13K.txt"
 
 #     print("Begin read tra file ...")
@@ -38,7 +40,7 @@ __all__ = [
 
 #     write_path = "../resultdata/genTra3.txt"
 #     file_in = open(write_path, "w")
-    
+
 #     print("Begin find max and min  ...")
 #     max_lng, max_lat, min_lng, min_lat = grid.max_range(tra)
 #     interval = max(max_lng - min_lng, max_lat - min_lat) / 200
@@ -94,7 +96,7 @@ __all__ = [
 #                         if tmp_f < min_f:
 #                             flag_tra = sub_tra0
 #                             min_f = tmp_f
-            
+
 #         line1 = ''
 
 #         for j in range(len(flag_tra)):
@@ -119,6 +121,7 @@ def standard():
         i += 1
     return feature
 
+
 def max_deltax(fea):
     deltax = [10, 1, 1, 10]
     list_deltax = []
@@ -128,7 +131,7 @@ def max_deltax(fea):
         tmp = 0
         for j in range(len(fea[i])):
             if fea[i][j] > max_f:
-                tmp = j+1
+                tmp = j + 1
                 max_f = fea[i][j]
         list_deltax.append(tmp)
         if fea[i][tmp] > 0:
@@ -137,6 +140,7 @@ def max_deltax(fea):
     for i in range(4):
         list_deltax[i] = deltax[i] * list_deltax[i]
     return list_deltax
+
 
 def f(x, delta_x):
     b = []
@@ -178,7 +182,8 @@ def link_sub_tra(tra_1, tra_2, towards=True):
     tra2 = copy.deepcopy(tra_2)
 
     for m in range(len(tra2) - 1):
-        s = features.addTime(features.toTime(tra1[-1][1]) + abs(features.toTime(tra_2[m][1]) - features.toTime(tra_2[m + 1][1])))
+        s = features.addTime(
+            features.toTime(tra1[-1][1]) + abs(features.toTime(tra_2[m][1]) - features.toTime(tra_2[m + 1][1])))
         tra2[m][1] = tra2[m][1].replace(tra2[m][1][6:], s)
         tra2[m][0] = tra1[m][0]
         if towards:
@@ -224,7 +229,7 @@ def ip(filepath, write_path):
     fea = standard()
     for i in range(len(fea)):
         for j in range(len(fea[i])):
-            fea[i][j] = math.ceil( num_gen_tra * float(fea[i][j]))
+            fea[i][j] = math.ceil(num_gen_tra * float(fea[i][j]))
 
     print("Begin read tra file ...")
     tra = fileOperator.read_file(filepath)
@@ -284,7 +289,7 @@ def ip(filepath, write_path):
                         if tmp_f < min_f:
                             flag_tra = sub_tra0
                             min_f = tmp_f
-            
+
         line1 = ''
 
         for j in range(len(flag_tra)):
@@ -296,6 +301,7 @@ def ip(filepath, write_path):
         print(count_tra)
     file_in.close()
     print("End generate new tra...")
+
 
 if __name__ == "__main__":
     ip("../falsedata/b13k.txt", "../dataresult/Beijing/IP.txt")

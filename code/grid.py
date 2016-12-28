@@ -7,11 +7,8 @@ __all__ = [
     "is_not_single",
     "crossing_cell",
     "cluster",
-    "test",
 ]
 
-def test():
-    print('test')
 
 def max_range(tra):
     max_lng, max_lat = 0.0, 0.0
@@ -27,10 +24,10 @@ def max_range(tra):
     return max_lng, max_lat, min_lng, min_lat
 
 
-def grid_map(n):
+def grid_map(m, n):
     grid = []
 
-    for i in range(n):
+    for i in range(m):
         grid.append([])
         for j in range(n):
             grid[i].append([])
@@ -59,16 +56,19 @@ def crossing_cell(grid):
 
 
 def cluster(tra, min_lng, min_lat, interval):
-    grid_cell = grid_map(200)
+    grid_cell = grid_map(200, 200)
     print("Begin grid cluster ...")
     for line in tra:
         delta_len = 0
-        lng_start, lat_start = float(line[0][3]), float(line[0][2])
+        if len(line) < 4:
+            continue
+        else:
+            lng_start, lat_start = float(line[0][3]), float(line[0][2])
         for i in range(len(line)):
             if len(line[i]) >= 4:
                 if i >= 1:
                     lng_start, lat_start = float(line[i-1][3]), float(line[i-1][2])
-                lng, lat= float(line[i][3]), float(line[i][2])
+                lng, lat = float(line[i][3]), float(line[i][2])
                 x = math.floor((lng - min_lng) / interval)
                 y = math.floor((lat - min_lat) / interval)
 

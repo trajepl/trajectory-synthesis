@@ -2,6 +2,7 @@ import random
 import copy
 import fileOperator
 import grid
+import features
 
 __all__ = [
     "swap_tra",
@@ -19,7 +20,7 @@ def swap_tra(tra1, tra2, i, j):
             if j + m - i < len(tra2):
                 tmp.append(swap1[m])
                 if len(tra2) == 4:
-                    s = grid.addTime(grid.toTime(tra1[m - 1][1]) + grid.toTime(tra2[j + m - i][1]) - grid.toTime(
+                    s = features.addTime(features.toTime(tra1[m - 1][1]) + features.toTime(tra2[j + m - i][1]) - features.toTime(
                         tra2[j + m - i - 1][1]))
                     tra1[m][1] = tra1[m][1].replace(tra1[m][1][6:], s)
                     tra1[m][2] = tra2[j + m - i][2]
@@ -32,8 +33,8 @@ def swap_tra(tra1, tra2, i, j):
         for n in range(j + 1, len(tmp) + j + 1):
             if n < len(tra2):
                 if len(tmp) == 4:
-                    s = grid.addTime(
-                        grid.toTime(tra2[n - 1][1]) + grid.toTime(tmp[n - j - 1][1]) - grid.toTime(tmp[n - j - 2][1]))
+                    s = features.addTime(
+                        features.toTime(tra2[n - 1][1]) + features.toTime(tmp[n - j - 1][1]) - features.toTime(tmp[n - j - 2][1]))
                     tra2[n][1] = tra2[n][1].replace(tra2[n][1][6:], s)
                     tra2[n][2] = tmp[n - j - 1][2]
                     tra2[n][3] = tmp[n - j - 1][3]
@@ -44,7 +45,7 @@ def swap_tra(tra1, tra2, i, j):
             if i + m - j < len(tra1):
                 tmp.append(swap2[m])
                 if len(tra1) == 4:
-                    s = grid.addTime(grid.toTime(tra2[m - 1][1]) + grid.toTime(tra1[i + m - j][1]) - grid.toTime(
+                    s = features.addTime(features.toTime(tra2[m - 1][1]) + features.toTime(tra1[i + m - j][1]) - features.toTime(
                         tra1[i + m - j - 1][1]))
                     tra2[m][1] = tra2[m][1].replace(tra2[m][1][6:], s)
                     tra2[m][2] = tra1[i + m - j][2]
@@ -57,8 +58,8 @@ def swap_tra(tra1, tra2, i, j):
         for n in range(i + 1, len(tmp) + i + 1):
             if n < len(tra1):
                 if len(tmp) == 4:
-                    s = grid.addTime(
-                        grid.toTime(tra1[n - 1][1]) + grid.toTime(tmp[n - i - 1][1]) - grid.toTime(tmp[n - i - 2][1]))
+                    s = features.addTime(
+                        features.toTime(tra1[n - 1][1]) + features.toTime(tmp[n - i - 1][1]) - features.toTime(tmp[n - i - 2][1]))
                     tra1[n][1] = tra1[n][1].replace(tra1[n][1][6:], s)
                     tra1[n][2] = tmp[n - i - 1][2]
                     tra1[n][3] = tmp[n - i - 1][3]
@@ -68,7 +69,7 @@ def swap_tra(tra1, tra2, i, j):
 
 
 # baseline1: random generation
-def random_generation(filepath, write_path):
+def random_generation(filepath, write_path, number):
     tra = fileOperator.read_file(filepath)
     file_in = open(write_path, "w")
 
@@ -80,8 +81,12 @@ def random_generation(filepath, write_path):
     grid_ceil, repeat = grid.cluster(tra, min_lng, min_lat, interval)
     print("Begin generate new tra...")
     count_tra = 0
-    for i in range(5000):
-        rand = random.randint(0, len(repeat) - 1)
+    for i in range(number // 2):
+        try:
+            rand = random.randint(0, len(repeat) - 1)
+        except ValueError:
+            print(len(repeat))
+            return -1
         point = repeat[rand]
         point_inline = grid_ceil[point[0]][point[1]]
         rand_inline = random.sample(point_inline, 2)
@@ -91,20 +96,22 @@ def random_generation(filepath, write_path):
         line1, line2 = '', ''
 
         for j in range(len(tra1)):
-            if len(tra1[j]) == 4:
-                line1 = line1 + str(count_tra) + ' ' + tra1[j][1] + ' ' + tra1[j][2] + ' ' + tra1[j][3] + '\n'
+            line1 = line1 + str(count_tra) + ' ' + tra1[j][1] + ' ' + tra1[j][2] + ' ' + tra1[j][3] + '\n'
 
         count_tra += 1
         for j in range(len(tra2)):
-            if len(tra2[j]) == 4:
-                line2 = line2 + str(count_tra) + ' ' + tra2[j][1] + ' ' + tra2[j][2] + ' ' + tra2[j][3] + '\n'
+            line2 = line2 + str(count_tra) + ' ' + tra2[j][1] + ' ' + tra2[j][2] + ' ' + tra2[j][3] + '\n'
         file_in.write(line1 + line2)
         count_tra += 1
 
     file_in.close()
+    fileOperator.count_tra = 0
     print("End generate new tra...")
 
 
 if __name__ == "__main__":
-    random_generation("../falsedata/b13k.txt", "../resultdata/Beijing/RG.txt")
-    random_generation("../falsedata/s13k.txt", "../resultdata/Shanghai/RG.txt")
+    print("Beijing: ")
+    random_generation("../falsedata/b13k.txt", "../resultdata/Beijing/RG.txt", 14500)
+
+    print("\nShanghai: ")
+    #random_generation("../falsedata/s13k.txt", "../resultdata/Shanghai/RG.txt", 18000)

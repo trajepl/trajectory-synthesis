@@ -29,10 +29,10 @@ def read_file(filepath):
             first = line
             matrix[count].append(line)
             count_tra += 1
-            if count_tra > 5000:
-                count_tra -= 1
-                matrix.pop()
-                break
+            # if count_tra > 5000:
+            #     count_tra -= 1
+            #     matrix.pop()
+            #     break
 
     file_in.close()
     print("End read trajectory file...")
