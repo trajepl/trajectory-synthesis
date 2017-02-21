@@ -28,7 +28,8 @@ def diff(num, num_origin):
     sum = 0
     for i in range(200):
         for j in range(200):
-            sum = sum + abs(len(num) / 4977689 - len(num_origin) / 1401413)
+            tmp = abs(len(num) / 4977689 - len(num_origin) / 1401413)
+            sum = sum + tmp
     print(sum)
 
 
